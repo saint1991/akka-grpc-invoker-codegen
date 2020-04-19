@@ -1,0 +1,37 @@
+@(service: akka.grpc.gen.scaladsl.Service)
+
+@akka.grpc.gen.Constants.DoNotEditComment
+
+package @{service.packageName}
+
+import akka.NotUsed
+import akka.stream.scaladsl.Source
+import scalapb.GeneratedMessage
+
+import com.github.saint1991.akka.grpc.invoker.runtime.{Invoker, UndefinedCall}
+
+import scala.concurrent.Future
+
+
+class @{service.name}ServiceInvoker(service: @{service.packageName}.@{service.name}) extends Invoker {
+
+  override def invoke(rpcName: String, message: Array[Byte]): Future[GeneratedMessage] =
+    rpcName match {
+      @for(method <- service.methods) {
+        @if(method.methodType == akka.grpc.gen.Unary) {
+      case "@{method.name}" => parseAndInvokeUnary(message)(@{method.parameterType}.parseFrom)(service.@{method.name})
+        }
+      }
+      case x => Future.failed(UndefinedCall(s"undefined call $x", null))
+    }
+
+  override def invokeStream(rpcName: String, message: Array[Byte]): Source[GeneratedMessage, NotUsed] =
+    rpcName match {
+      @for(method <- service.methods) {
+        @if(method.methodType == akka.grpc.gen.ServerStreaming) {
+      case "@{method.name}" => parseAndInvokeStream(message)(@{method.parameterType}.parseFrom)(service.@{method.name})
+        }
+      }
+      case x => Source.failed(UndefinedCall(s"undefined call $x", null))
+    }
+}
