@@ -47,6 +47,7 @@ lazy val publishSettings = Seq(
 )
 
 lazy val releaseSettings = Seq(
+  publishConfiguration := publishConfiguration.value.withOverwrite(true),
   releaseCrossBuild := true,
   releaseVersion := { ver =>
     Version(ver).map(_.withoutQualifier.string).getOrElse(throw new IllegalArgumentException("Version format error"))
