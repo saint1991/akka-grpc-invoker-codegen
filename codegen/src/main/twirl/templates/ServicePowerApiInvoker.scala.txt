@@ -14,7 +14,7 @@ import com.github.saint1991.akka.grpc.invoker.runtime.{PowerApiInvoker, Undefine
 import scala.concurrent.Future
 
 
-class @{service.name}ServicePowerApiInvoker(service: @{service.packageName}.@{service.name}PowerApi) extends PowerApiInvoker {
+class @{service.name}PowerApiServiceInvoker(service: @{service.packageName}.@{service.name}PowerApi) extends PowerApiInvoker {
 
   override def invoke(rpcName: String, message: Array[Byte], metadata: Metadata): Future[GeneratedMessage] =
     rpcName match {
